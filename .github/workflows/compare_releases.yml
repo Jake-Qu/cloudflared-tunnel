@@ -20,9 +20,9 @@ jobs:
       - name: Get latest release info for official cloudflared
         id: official_release
         run: |
-          release_info=$(curl https://api.github.com/reposcloudflare/cloudflared/releases/latest)
+          release_name=$(curl https://api.github.com/reposcloudflare/cloudflared/releases/latest | jq .html_url | sed -n 's/.*\/tag\/\([^"]*\).*/\1/p' )
           # echo "::set-output name=release_name::$(echo $release_info | jq .html_url | sed -n 's/.*\/tag\/\([^"]*\).*/\1/p')"
-          echo "{name}={$(echo $release_info | jq .html_url | sed -n 's/.*\/tag\/\([^"]*\).*/\1/p')}" >> $OFFICIAL_RELEASE_NAME
+          echo "{name}={release_name}" >> $OFFICIAL_RELEASE_NAME
       - name: Get latest release info for my cloudflared-tunnel
         id: my_release
         run: |
