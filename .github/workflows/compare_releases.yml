@@ -39,7 +39,7 @@ jobs:
           if [ "${{ steps.official_release.outputs.release_name }}" == "${{ steps.my_release.outputs.release_name }}" ]; then
             echo "The latest releases of the two repositories have the same name."
             echo "${{ steps.official_release.outputs.download_url }}"
-            exit 0
+            exit 1
           else
             echo "The latest releases of the two repositories do not have the same name."
             git checkout -b ${{ steps.official_release.outputs.release_name }}
