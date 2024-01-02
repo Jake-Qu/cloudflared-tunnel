@@ -9,12 +9,12 @@ jobs:
       - name: Get latest release info for official cloudflared
         id: official_release
         run: |
-          release_info=$(https://api.github.com/reposcloudflare/cloudflared/releases/latest)
+          release_info=curl $(https://api.github.com/reposcloudflare/cloudflared/releases/latest)
           echo "::set-output name=release_name::$(echo $release_info | jq .html_url | sed -n 's/.*\/tag\/\([^"]*\).*/\1/p')"
       - name: Get latest release info for my cloudflared-tunnel
         id: my_release
         run: |
-          release_info=$(https://api.github.com/repos/Jake-Qu/cloudflared-tunnel/releases/latest)
+          release_info=curl $(https://api.github.com/repos/Jake-Qu/cloudflared-tunnel/releases/latest)
           echo "::set-output name=release_name::$(echo $release_info | jq .html_url | sed -n 's/.*\/tag\/\([^"]*\).*/\1/p')"
       - name: Compare release names
         run: |
