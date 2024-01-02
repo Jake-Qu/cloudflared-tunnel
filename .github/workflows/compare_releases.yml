@@ -22,17 +22,17 @@ jobs:
         run: |
           release_info=$(curl https://api.github.com/reposcloudflare/cloudflared/releases/latest)
           # echo "::set-output name=release_name::$(echo $release_info | jq .html_url | sed -n 's/.*\/tag\/\([^"]*\).*/\1/p')"
-          echo "release_name=$(echo $release_info | jq .html_url | sed -n 's/.*\/tag\/\([^"]*\).*/\1/p')" >> $env.OFFICIAL_RELEASE_NAME
+          echo "release_name=$(echo $release_info | jq .html_url | sed -n 's/.*\/tag\/\([^"]*\).*/\1/p')" >> "$GITHUB_OUTPUT"
       - name: Get latest release info for my cloudflared-tunnel
         id: my_release
         run: |
           release_info=$(curl https://api.github.com/repos/Jake-Qu/cloudflared-tunnel/releases/latest)
           # echo "::set-output name=release_name::$(echo $release_info | jq .html_url | sed -n 's/.*\/tag\/\([^"]*\).*/\1/p')"
-          echo "release_name=$(echo $release_info | jq .html_url | sed -n 's/.*\/tag\/\([^"]*\).*/\1/p')" >> $env.MY_RELEASE_NAME
+          echo "release_name=$(echo $release_info | jq .html_url | sed -n 's/.*\/tag\/\([^"]*\).*/\1/p')" >> "$GITHUB_OUTPUT"
       - name: Compare release names
         run: |
-          # if [ "${{ steps.official_release.outputs.release_name }}" == "${{ steps.my_release.outputs.release_name }}" ]; then
-          if [ "${env.OFFICIAL_RELEASE_NAME}" = "${env.MY_RELEASE_NAME}"];then
+          if [ "${{ steps.official_release.outputs.release_name }}" == "${{ steps.my_release.outputs.release_name }}" ]; then
+          # if [ "${env.OFFICIAL_RELEASE_NAME}" = "${env.MY_RELEASE_NAME}"];then
             echo "The latest releases of the two repositories have the same name."
           else
             echo "The latest releases of the two repositories do not have the same name."
