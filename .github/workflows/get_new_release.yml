@@ -1,1 +1,18 @@
-
+name: Get latest release version
+on:
+  schedule:
+    - cron:  '0 10 * * *'
+jobs:
+  get-version:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.REPO_SCOPED_TOKEN }}
+      - name: Fetch release version
+        run: |
+          curl -sL https://api.github.com/repos/cloudflare/cloudflared/releases/latest | \
+          jq -r '.assets[] | select(.name == "cloudflared-linux-amd64") | .browser_download_url' \
+          > release_version/result.txt
+      - name: Check for modified files
+        run: echo release_version/result.txt
