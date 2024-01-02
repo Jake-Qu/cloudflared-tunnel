@@ -67,4 +67,9 @@ jobs:
           
           # Branch to merge other branch on
           to_branch: main
+      - name: Create a new Tag
+        uses: negz/create-tag@v1
+        with:
+          version: ${{ steps.official_release.outputs.release_name }}
+          token: ${{ secrets.GITHUB_TOKEN }}
         
