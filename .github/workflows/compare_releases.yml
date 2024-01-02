@@ -13,15 +13,22 @@ on:
         - debug
   # schedule:
   #   - cron:  '*/5 * * * *'
+permissions:
+  # Need `contents: read` to checkout the repository
+  # Need `contents: write` to merge branches
+  contents: write
 jobs:
   compare-releases:
     runs-on: ubuntu-latest
     steps:
+      - name: Check out the repo
+        uses: actions/checkout@v3
       - name: Get latest release info for official cloudflared
         id: official_release
         run: |
           release_info=$(curl https://api.github.com/repos/cloudflare/cloudflared/releases/latest)
           echo "::set-output name=release_name::$(echo $release_info | jq .html_url | sed -n 's/.*\/tag\/\([^"]*\).*/\1/p')"
+          echo "::set-output name=download_url::$(echo $release_info | jq '.assets[] | select(.name == "cloudflared-linux-amd64") | .browser_download_url')"
       - name: Get latest release info for my cloudflared-tunnel
         id: my_release
         run: |
@@ -31,6 +38,33 @@ jobs:
         run: |
           if [ "${{ steps.official_release.outputs.release_name }}" == "${{ steps.my_release.outputs.release_name }}" ]; then
             echo "The latest releases of the two repositories have the same name."
+            echo "${{ steps.official_release.outputs.download_url }}"
+            exit 0
           else
             echo "The latest releases of the two repositories do not have the same name."
+            git checkout -b ${{ steps.official_release.outputs.release_name }}
+            origin_url=$(cat Dockerfile | sed -n '2p'| awk '{print $NF}')
+            sed "s^${origin_url}^${{ steps.official_release.outputs.download_url }}^g" Dockerfile
+            git add .
+            git commit -m "Auto commit by GitHub Actions"
+            git push origin ${{ steps.official_release.outputs.release_name }}
           fi
+      - name: merge branch to main
+        uses: devvspaces/merge-branches@v1
+        with:
+            # Personal access token (PAT) used to merge branches. The PAT is configured
+            # with the local git config, which enables your scripts to run authenticated git
+            # commands.
+            #
+            # We recommend using a service account with the least permissions necessary. Also
+            # when generating a new PAT, select the least scopes necessary.
+            #
+            # [Learn more about creating and using encrypted secrets]
+            # (https://help.github.com/en/actions/automating-your-workflow-with-github-actions/creating-and-using-encrypted-secrets)
+          token: ${{ github.token }}
+          # Branch to merge to other branch
+          from_branch: ${{ steps.official_release.outputs.release_name }}
+          
+          # Branch to merge other branch on
+          to_branch: main
+        
