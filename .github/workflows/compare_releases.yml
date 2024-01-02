@@ -1,7 +1,7 @@
 name: Compare Releases
 on:
   schedule:
-    - cron:  '*/2 * * * *'
+    - cron:  '*/5 * * * *'
 jobs:
   compare-releases:
     runs-on: ubuntu-latest
