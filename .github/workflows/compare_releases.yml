@@ -63,7 +63,7 @@ jobs:
             # (https://help.github.com/en/actions/automating-your-workflow-with-github-actions/creating-and-using-encrypted-secrets)
           token: ${{ github.token }}
           # Branch to merge to other branch
-          from_branch: ${{ steps.official_release.outputs.release_name }}
+          from_branch: origin/${{ steps.official_release.outputs.release_name }}
           
           # Branch to merge other branch on
           to_branch: main
@@ -72,4 +72,13 @@ jobs:
         with:
           version: ${{ steps.official_release.outputs.release_name }}
           token: ${{ secrets.GITHUB_TOKEN }}
+
+
+  # - name: Set color
+  #       id: color-selector
+  #       run: echo "SELECTED_COLOR=green" >> "$GITHUB_OUTPUT"
+  #     - name: Get color
+  #       env:
+  #         SELECTED_COLOR: ${{ steps.color-selector.outputs.SELECTED_COLOR }}
+  #       run: echo "The selected color is $SELECTED_COLOR"
         
