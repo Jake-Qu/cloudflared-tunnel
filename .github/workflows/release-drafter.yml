@@ -1,0 +1,50 @@
+name: Release Drafter
+
+on:   # 配置触发workflow的事件
+  push:
+    tags:       # tag更新时触发此workflow
+      - '*'
+  # push:
+  #   # branches to consider in the event; optional, defaults to all
+  #   branches:
+  #     - master
+  # # pull_request event is required only for autolabeler
+  # pull_request:
+  #   # Only following types are handled by the action, but one can default to all as well
+  #   types: [opened, reopened, synchronize]
+  # # pull_request_target event is required for autolabeler to support PRs from forks
+  # # pull_request_target:
+  # #   types: [opened, reopened, synchronize]
+
+permissions:
+  contents: read
+
+jobs:
+  update_release_draft:
+    permissions:
+      # write permission is required to create a github release
+      contents: write
+      # write permission is required for autolabeler
+      # otherwise, read permission is required at least
+      pull-requests: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v3   # 官方的action，获取代码
+      - name: Docker Login
+        uses: docker/login-action@v2.1.0  # 三方的action操作， 执行docker login
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}  # 配置dockerhub的认证，在Github项目主页 【Settings】 -> 【Secrets】 添加对应变量
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Get Latest Tag
+        id: latest-tag
+        run: |
+          latest_tag=$(git describe --tags `git rev-list --tags --max-count=1`)
+          echo "Latest tag is $latest_tag"
+      - uses: release-drafter/release-drafter@v6
+        # (Optional) specify config name to use, relative to .github/. Default: release-drafter.yml
+        with:
+          config-name: release-drafter.yml
+          disable-autolabeler: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
