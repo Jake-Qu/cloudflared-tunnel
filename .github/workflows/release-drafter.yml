@@ -38,7 +38,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Get Latest Tag
         run: |
-          tag_name=$(git describe --tags $(git rev-list --tags --max-count=1))"
+          tag_name=$(git describe --tags `git rev-list --tags --max-count=1`)"
           echo "tag_name: $tag_name"
           echo "tag_name=$tag_name" >> "$GITHUB_ENV"
       - name: print tag_name
