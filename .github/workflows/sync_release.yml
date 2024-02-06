@@ -94,7 +94,13 @@ jobs:
             printf '%s\n' "$tag_name" 
             new_tag=$tag_name
             sed  "s^TAG_NAME^${new_tag}^g" .github/release-drafter.yml
-
+      - uses: release-drafter/release-drafter@v6
+        # (Optional) specify config name to use, relative to .github/. Default: release-drafter.yml
+        with:
+          config-name: release-drafter.yml
+          disable-autolabeler: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   push_to_dockerhub:  # job的名字
     name: Push Docker image to Docker Hub
     runs-on: ubuntu-latest   # job运行的基础环境
@@ -107,13 +113,11 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Extract metadata (tags, labels) for Docker
         id: meta
-        uses: docker/metadata-action@v4.3.0  # 抽取项目信息，主要是镜像的tag
-        with:
-          images: qubo93/cloudflared-tunnel
+        run: |
+            new_tag=$tag_name
       - name: Build and push Docker image
         uses: docker/build-push-action@v4.0.0 # docker build & push
         with:
           context: .
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: qubo93/cloudflared-tunnel:${new_tag}
