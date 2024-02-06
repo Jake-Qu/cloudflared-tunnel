@@ -118,7 +118,7 @@ jobs:
       - name: Extract metadata (tags, labels) for Docker
         id: meta
         run: |
-            new_tag=$tag_name
+            env | grep -i tag
       - name: Build and push Docker image
         uses: docker/build-push-action@v4.0.0 # docker build & push
         with:
