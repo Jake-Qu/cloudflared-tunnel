@@ -96,6 +96,7 @@ jobs:
       - name: print tag_name and change TAG_NAME
         run: |
             sed -i "s^TAG_NAME^${{ steps.latest_tag.outputs.tag_name }}^g" .github/release-drafter.yml
+            cat .github/release-drafter.yml
       - uses: release-drafter/release-drafter@v6
         # (Optional) specify config name to use, relative to .github/. Default: release-drafter.yml
         with:
