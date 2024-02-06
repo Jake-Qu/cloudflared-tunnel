@@ -36,13 +36,14 @@ jobs:
         run: |
           tag_info=$(curl https://api.github.com/repos/cloudflare/cloudflared/tags)
           echo "tag_name=$(echo $tag_info | jq  '.[] | .name' | head -1)" >> "$GITHUB_ENV"
-      - name: print tag_name
+      - name: print tag_name and change TAG_NAME
         run: |
           printf '%s\n' "$tag_name" # This will output 'yellow'
-      # - uses: release-drafter/release-drafter@v6
-      #   # (Optional) specify config name to use, relative to .github/. Default: release-drafter.yml
-      #   with:
-      #     config-name: release-drafter.yml
-      #     disable-autolabeler: true
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          sed -i "s^TAG_NAME^$tag_name^g" .github/release-drafter.yml
+      - uses: release-drafter/release-drafter@v6
+        # (Optional) specify config name to use, relative to .github/. Default: release-drafter.yml
+        with:
+          config-name: release-drafter.yml
+          disable-autolabeler: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
