@@ -40,6 +40,8 @@ jobs:
             echo "The latest releases of the two repositories have the same name."
             exit 1
           else
+            git config --global user.email "qubo93@gmail.com"
+            git config --global user.name "Jake-Qu"
             echo "The latest releases of the two repositories do not have the same name."
             git checkout -b ${{ steps.official_release.outputs.release_name }}
             origin_url=$(cat Dockerfile | sed -n '2p'| awk '{print $NF}')
