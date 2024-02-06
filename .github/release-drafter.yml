@@ -1,0 +1,4 @@
+name-template: '$latest_tag'
+template: |
+  ## Changes
+  base package from https://github.com/cloudflare/cloudflared/releases/tag/$latest_tag
