@@ -35,7 +35,7 @@ jobs:
         id: latest_tag
         run: |
           tag_info=$(curl https://api.github.com/repos/cloudflare/cloudflared/tags)
-          echo "tag_name=$(echo $tag_info | jq  '.[] | .name' | head -1)" >> "$GITHUB_ENV"
+          echo "tag_name=$(echo $tag_info | jq -r '.[] | .name' | head -1)" >> "$GITHUB_ENV"
       - name: print tag_name and change TAG_NAME
         run: |
           printf '%s\n' "$tag_name" 
