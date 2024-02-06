@@ -1,4 +1,4 @@
-name-template: '$tag_name'
+name-template: 'TAG_NAME'
 template: |
   ## Changes
-  base package from https://github.com/cloudflare/cloudflared/releases/tag/$tag_name
+  base package from https://github.com/cloudflare/cloudflared/releases/tag/TAG_NAME
