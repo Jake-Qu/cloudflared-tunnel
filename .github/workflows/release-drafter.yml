@@ -34,7 +34,7 @@ jobs:
       - name: Get Latest Tag
         id: latest_tag
         run: |
-          tag_info=$(curl https://api.github.com/repos/cloudflare/cloudflared/tag)
+          tag_info=$(curl https://api.github.com/repos/cloudflare/cloudflared/tags)
           echo "tag_name=$(echo $tag_info | jq  '.[] | .name' | head -1)" >> "$GITHUB_ENV"
       - name: print tag_name
         run: |
