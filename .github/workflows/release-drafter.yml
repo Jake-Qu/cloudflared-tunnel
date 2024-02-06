@@ -37,10 +37,10 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}  # 配置dockerhub的认证，在Github项目主页 【Settings】 -> 【Secrets】 添加对应变量
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Get Latest Tag
-        id: latest-tag
+        id: latest_tag
         run: |
-          latest_tag=$(git describe --tags `git rev-list --tags --max-count=1`)
-          echo "Latest tag is $latest_tag"
+          echo "::set-output name=tag_name::$(git describe --tags `git rev-list --tags --max-count=1`)"
+          echo "Latest tag is ${{ steps.latest_tag.outputs.tag_name }}"
       - uses: release-drafter/release-drafter@v6
         # (Optional) specify config name to use, relative to .github/. Default: release-drafter.yml
         with:
