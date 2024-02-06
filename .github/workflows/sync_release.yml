@@ -69,6 +69,7 @@ jobs:
           # Branch to merge other branch on
           to_branch: main
       - name: Create a new Tag
+        # 修改bug，应该从main分支新建一个tag
         uses: negz/create-tag@v1
         with:
           version: ${{ steps.official_release.outputs.release_name }}
