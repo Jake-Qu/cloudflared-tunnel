@@ -95,7 +95,7 @@ jobs:
         run: |
             printf '%s\n' "$tag_name" 
             new_tag=$tag_name
-            sed  "s^TAG_NAME^${new_tag}^g" .github/release-drafter.yml
+            sed -i "s^TAG_NAME^${new_tag}^g" .github/release-drafter.yml
       - uses: release-drafter/release-drafter@v6
         # (Optional) specify config name to use, relative to .github/. Default: release-drafter.yml
         with:
@@ -124,4 +124,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: qubo93/cloudflared-tunnel:${new_tag}
+          tags: qubo93/cloudflared-tunnel:${env.tag_name}
