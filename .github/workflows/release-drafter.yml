@@ -37,10 +37,10 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}  # 配置dockerhub的认证，在Github项目主页 【Settings】 -> 【Secrets】 添加对应变量
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Get Latest Tag
+        id: latest_tag
         run: |
-          tag_name=$(git describe --tags `git rev-list --tags --max-count=1`)
-          echo "tag_name: $tag_name"
-          echo "tag_name=$tag_name" >> "$GITHUB_ENV"
+          tag_info=$(curl https://api.github.com/repos/cloudflare/cloudflared/tag)
+          echo "tag_name=$(echo $tag_info | jq  '.[] | .name' | head -1" >> "$GITHUB_ENV"
       - name: print tag_name
         run: |
           printf '%s\n' "$tag_name" # This will output 'yellow'
