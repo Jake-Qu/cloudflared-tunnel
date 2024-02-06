@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4.1.1
       - name: Get latest release info for official cloudflared
         id: official_release
         run: |
@@ -84,8 +84,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: compare-releases
     steps:
-      - name: Check out the repo
-        uses: actions/checkout@v3   # 官方的action，获取代码
       - name: Get Latest Tag
         id: latest_tag
         run: |
@@ -102,8 +100,6 @@ jobs:
     runs-on: ubuntu-latest   # job运行的基础环境
     needs: update_release_draft
     steps:  # 一个job由一个或多个step组成
-      - name: Check out the repo
-        uses: actions/checkout@v3   # 官方的action，获取代码
       - name: Docker Login
         uses: docker/login-action@v2.1.0  # 三方的action操作， 执行docker login
         with:
