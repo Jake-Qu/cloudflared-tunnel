@@ -39,10 +39,10 @@ jobs:
       - name: print tag_name
         run: |
           printf '%s\n' "$tag_name" # This will output 'yellow'
-      - uses: release-drafter/release-drafter@v6
-        # (Optional) specify config name to use, relative to .github/. Default: release-drafter.yml
-        with:
-          config-name: release-drafter.yml
-          disable-autolabeler: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # - uses: release-drafter/release-drafter@v6
+      #   # (Optional) specify config name to use, relative to .github/. Default: release-drafter.yml
+      #   with:
+      #     config-name: release-drafter.yml
+      #     disable-autolabeler: true
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
