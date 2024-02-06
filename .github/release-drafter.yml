@@ -1,4 +1,4 @@
-name-template: '${{ steps.latest-tag.outputs.latest-tag }}'
+name-template: '${{ steps.latest_tag.outputs.tag_name }}'
 template: |
   ## Changes
-  base package from https://github.com/cloudflare/cloudflared/releases/tag/${{ steps.latest-tag.outputs.latest-tag }}
+  base package from https://github.com/cloudflare/cloudflared/releases/tag/${{ steps.latest_tag.outputs.tag_name }}
