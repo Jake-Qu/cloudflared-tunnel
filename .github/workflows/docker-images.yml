@@ -1,21 +1,9 @@
 # docker-image.yml
 name: Publish Docker image   # workflow名称，可以在Github项目主页的【Actions】中看到所有的workflow
-# on:   # 配置触发workflow的事件
-#   push:
-#     tags:       # tag更新时触发此workflow
-#       - '*'
-on:
-  workflow_dispatch:
-    inputs:
-      logLevel:
-        description: 'Log level'
-        required: true
-        default: 'warning'
-        type: choice
-        options:
-        - info
-        - warning
-        - debug
+on:   # 配置触发workflow的事件
+  push:
+    tags:       # tag更新时触发此workflow
+      - '*'
 jobs:  # workflow中的job
   push_to_registry:  # job的名字
     name: Push Docker image to Docker Hub
