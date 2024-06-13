@@ -37,7 +37,7 @@ jobs:  # workflow中的job
         uses: docker/build-push-action@v4.0.0 # docker build & push
         with:
           context: .
-          file: ./Dockerfile
+          file: ./Dockerfile_arm
           push: true
           platforms: |
             linux/arm64
