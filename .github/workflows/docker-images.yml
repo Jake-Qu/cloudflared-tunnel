@@ -33,14 +33,14 @@ jobs:  # workflow中的job
             linux/amd64
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-      - name: Build and push Docker image for ARM
-        uses: docker/build-push-action@v4.0.0 # docker build & push
-        with:
-          context: .
-          file: ./Dockerfile_arm
-          push: true
-          platforms: |
-            linux/arm64
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+      # - name: Build and push Docker image for ARM
+      #   uses: docker/build-push-action@v4.0.0 # docker build & push
+      #   with:
+      #     context: .
+      #     file: ./Dockerfile_arm
+      #     push: true
+      #     platforms: |
+      #       linux/arm64
+      #     tags: ${{ steps.meta.outputs.tags }}
+      #     labels: ${{ steps.meta.outputs.labels }}
         
