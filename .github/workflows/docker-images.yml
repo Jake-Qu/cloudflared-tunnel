@@ -11,6 +11,8 @@ jobs:  # workflow中的job
     steps:  # 一个job由一个或多个step组成
       - name: Check out the repo
         uses: actions/checkout@v3   # 官方的action，获取代码
+      - name: Set up Docker BuildX  # Docker配置多平台环境
+        uses: docker/setup-buildx-action@v2 
       - name: Docker Login
         uses: docker/login-action@v2.1.0  # 三方的action操作， 执行docker login
         with:
@@ -21,10 +23,24 @@ jobs:  # workflow中的job
         uses: docker/metadata-action@v4.3.0  # 抽取项目信息，主要是镜像的tag
         with:
           images: qubo93/cloudflared-tunnel
-      - name: Build and push Docker image
+      - name: Build and push Docker image for X86_64
         uses: docker/build-push-action@v4.0.0 # docker build & push
         with:
           context: .
+          file: ./Dockerfile
           push: true
+          platforms: |
+            linux/amd64
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+      - name: Build and push Docker image for ARM
+        uses: docker/build-push-action@v4.0.0 # docker build & push
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          platforms: |
+            linux/arm64
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+        
