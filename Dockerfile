@@ -1,5 +1,5 @@
 FROM alpine:3.17
-#RUN wget -O /usr/bin/cloudflared https://github.com/cloudflare/cloudflared/releases/download/2024.6.1/cloudflared-linux-amd64
+#RUN wget -O /usr/bin/cloudflared https://github.com/cloudflare/cloudflared/releases/download/2024.8.2/cloudflared-linux-amd64
 ADD https://github.com/cloudflare/cloudflared/releases/download/2024.6.1/cloudflared-linux-amd64 /usr/bin/cloudflared
 RUN chmod +x /usr/bin/cloudflared
 EXPOSE 9123
