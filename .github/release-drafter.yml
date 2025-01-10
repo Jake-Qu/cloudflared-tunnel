@@ -1,3 +1,2 @@
-name-template: $tag_name
 template: |
   base package from https://github.com/cloudflare/cloudflared/releases/tag/$tag_name
