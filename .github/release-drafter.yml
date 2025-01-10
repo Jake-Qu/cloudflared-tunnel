@@ -1,5 +1,6 @@
 template: |
   base package from https://github.com/cloudflare/cloudflared/releases/tag/$VERSION
-  
 
-$CONTRIBUTORS
+  ## CONTRIBUTORS
+  
+  $CONTRIBUTORS
