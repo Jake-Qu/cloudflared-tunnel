@@ -109,6 +109,8 @@ jobs:
           name: ${{ steps.latest_tag.outputs.tag_name }}
           tag: ${{ steps.latest_tag.outputs.tag_name }}
           config-name: release-drafter.yml
+          latest: true
+          publish: false
           footer: 'base package from https://github.com/cloudflare/cloudflared/releases/tag/${{ steps.latest_tag.outputs.tag_name }}'
           disable-autolabeler: true
         env:
