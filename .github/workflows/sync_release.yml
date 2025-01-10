@@ -103,12 +103,12 @@ jobs:
         run: |
             sed -i "s^TAG_NAME^${{ steps.latest_tag.outputs.tag_name }}^g" .github/release-drafter.yml
             cat .github/release-drafter.yml
-      - uses: release-drafter/release-drafter@v6
+      - uses: release-drafter/release-drafter@v6.0.0
         # (Optional) specify config name to use, relative to .github/. Default: release-drafter.yml
         with:
           name: ${{ steps.latest_tag.outputs.tag_name }}
           config-name: release-drafter.yml
-          version: ${{ steps.latest_tag.outputs.tag_name }}
+          change-template: ${{ steps.latest_tag.outputs.tag_name }}
           disable-autolabeler: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
