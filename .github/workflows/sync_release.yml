@@ -108,7 +108,9 @@ jobs:
         with:
           name: ${{ steps.latest_tag.outputs.tag_name }}
           config-name: release-drafter.yml
-          change-template: ${{ steps.latest_tag.outputs.tag_name }}
+          replacers: 
+            - search: 'TAG_NAME'
+              replace: ${{ steps.latest_tag.outputs.tag_name }}
           disable-autolabeler: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
