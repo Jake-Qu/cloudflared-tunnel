@@ -38,8 +38,7 @@ jobs:
         run: |
           if [ "${{ steps.official_release.outputs.release_name }}" == "${{ steps.my_release.outputs.release_name }}" ]; then
             echo "The latest releases of the two repositories have the same name."
-            exit 1
-          else
+            exit 0   else
             git config --global user.email "qubo93@gmail.com"
             git config --global user.name "Jake-Qu"
             echo "The latest releases of the two repositories do not have the same name."
