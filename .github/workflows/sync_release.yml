@@ -74,7 +74,7 @@ jobs:
           git config --global user.name "Jake-Qu"
           git checkout main
           echo "The latest releases of the two repositories do not have the same name."
-          git checkout -b ${{ steps.official_release.outputs.release_name }}
+          # git checkout -b ${{ steps.official_release.outputs.release_name }}
           origin_url=$(cat Dockerfile | sed -n '2p'| awk '{print $NF}')
           sed -i "s^${origin_url}^${{ steps.official_release.outputs.download_url }}^g" Dockerfile
           git commit -am "Auto commit by GitHub Actions"
