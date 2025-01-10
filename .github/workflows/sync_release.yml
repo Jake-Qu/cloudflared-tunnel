@@ -79,7 +79,7 @@ jobs:
           sed -i "s^${origin_url}^${{ steps.official_release.outputs.download_url }}^g" Dockerfile
           git commit -am "Auto commit by GitHub Actions"
           git tag ${{ steps.official_release.outputs.release_name }}
-          git push origin ${{ steps.official_release.outputs.release_name }}
+          git push origin main --tags
   update_release_draft:
     permissions:
       # write permission is required to create a github release
