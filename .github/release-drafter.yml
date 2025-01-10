@@ -1,2 +1,2 @@
 template: |
-  base package from https://github.com/cloudflare/cloudflared/releases/tag/$tag_name
+  base package from https://github.com/cloudflare/cloudflared/releases/tag/$CHANGES
