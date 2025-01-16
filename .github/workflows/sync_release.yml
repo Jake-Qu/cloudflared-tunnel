@@ -52,7 +52,7 @@ jobs:
           sed -i "s^${origin_url}^${{ steps.official_release.outputs.download_url }}^g" Dockerfile
           git commit -am "Auto commit by GitHub Actions"
           git tag ${{ steps.official_release.outputs.release_name }}
-          git push https://qubo93@gmail.com:${GITHUB_PAT}github.com/Jake-Qu/cloudflared-tunnel.git --tags
+          git push https://Jake-Qu:${GITHUB_PAT}@github.com/Jake-Qu/cloudflared-tunnel.git --tags
 
   update_release_publish:
     permissions:
