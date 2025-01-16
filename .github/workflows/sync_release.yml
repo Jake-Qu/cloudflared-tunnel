@@ -60,10 +60,10 @@ jobs:
         with:
           tag_name: ${{ steps.official_release.outputs.release_name }}
           release_name: "${{ steps.official_release.outputs.release_name }}"
-          body: "base package from ${{ steps.official_release.outputs.download_url }}"
+          body: "base package from base package from https://github.com/cloudflare/cloudflared/releases/tag/${{ steps.official_release.outputs.release_name }}"
           draft: false
           prerelease: false
-          
+
 
   # update_release_publish:
   #   permissions:
