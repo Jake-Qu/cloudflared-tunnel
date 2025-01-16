@@ -39,48 +39,19 @@ jobs:
           if [ "${{ steps.official_release.outputs.release_name }}" == "${{ steps.my_release.outputs.release_name }}" ]; then
             echo "The latest releases of the two repositories have the same name."
             exit 1
-          # else
-          #   git config --global user.email "qubo93@gmail.com"
-          #   git config --global user.name "Jake-Qu"
-          #   echo "The latest releases of the two repositories do not have the same name."
-          #   git checkout -b ${{ steps.official_release.outputs.release_name }}
-          #   origin_url=$(cat Dockerfile | sed -n '2p'| awk '{print $NF}')
-          #   sed -i "s^${origin_url}^${{ steps.official_release.outputs.download_url }}^g" Dockerfile
-          #   git add *
-          #   git commit -m "Auto commit by GitHub Actions"
-          #   git push origin ${{ steps.official_release.outputs.release_name }}
           fi
-      # - name: merge branch to main
-      #   uses: devvspaces/merge-branches@v1
-      #   with:
-      #       # Personal access token (PAT) used to merge branches. The PAT is configured
-      #       # with the local git config, which enables your scripts to run authenticated git
-      #       # commands.
-      #       #
-      #       # We recommend using a service account with the least permissions necessary. Also
-      #       # when generating a new PAT, select the least scopes necessary.
-      #       #
-      #       # [Learn more about creating and using encrypted secrets]
-      #       # (https://help.github.com/en/actions/automating-your-workflow-with-github-actions/creating-and-using-encrypted-secrets)
-      #     token: ${{ github.token }}
-      #     # Branch to merge to other branch
-      #     from_branch: origin/${{ steps.official_release.outputs.release_name }}
-          
-      #     # Branch to merge other branch on
-      #     to_branch: main
       - name: Create and push a new Tag
         run: |
           git config --global user.email "qubo93@gmail.com"
           git config --global user.name "Jake-Qu"
           git checkout main
           echo "The latest releases of the two repositories do not have the same name."
-          # git checkout -b ${{ steps.official_release.outputs.release_name }}
           origin_url=$(cat Dockerfile | sed -n '2p'| awk '{print $2}')
           sed -i "s^${origin_url}^${{ steps.official_release.outputs.download_url }}^g" Dockerfile
           git commit -am "Auto commit by GitHub Actions"
           git tag ${{ steps.official_release.outputs.release_name }}
           git push origin main --tags
-  update_release_draft:
+  update_release_publish:
     permissions:
       # write permission is required to create a github release
       contents: write
@@ -108,72 +79,37 @@ jobs:
         with:
           name: ${{ steps.latest_tag.outputs.tag_name }}
           tag: ${{ steps.latest_tag.outputs.tag_name }}
-          # config-name: release-drafter.yml
           latest: true
           publish: true
           header: 'base package from https://github.com/cloudflare/cloudflared/releases/tag/${{ steps.latest_tag.outputs.tag_name }}'
           disable-autolabeler: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-
-
-
-    # steps:
-    #   - name: Check out the repo
-    #     uses: actions/checkout@v4.1.1
-    #   - name: Get Latest Tag
-    #     id: latest_tag
-    #     run: |
-    #         tag_info=$(curl https://api.github.com/repos/cloudflare/cloudflared/tags)
-    #         echo "::set-output name=tag_name::$(echo $tag_info | jq -r '.[] | .name' | head -1)"
-    #   - name: print tag_name and change TAG_NAME
-    #     run: |
-    #         sed -i "s^TAG_NAME^${{ steps.latest_tag.outputs.tag_name }}^g" .github/release-drafter.yml
-    #         cat .github/release-drafter.yml
-    #   - uses: release-drafter/release-drafter@v6
-    #     # (Optional) specify config name to use, relative to .github/. Default: release-drafter.yml
-    #     with:
-    #       config-name: release-drafter.yml
-    #       disable-autolabeler: true
-    #     env:
-    #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-          
-  # push_to_dockerhub:  # job的名字
-  #   name: Push Docker image to Docker Hub
-  #   runs-on: ubuntu-latest   # job运行的基础环境
-  #   needs: update_release_draft
-  #   steps:  # 一个job由一个或多个step组成
-  #     - name: Check out the repo
-  #       uses: actions/checkout@v4.1.1
-  #     - name: Docker Login
-  #       uses: docker/login-action@v2.1.0  # 三方的action操作， 执行docker login
-  #       with:
-  #         username: ${{ secrets.DOCKERHUB_USERNAME }}  # 配置dockerhub的认证，在Github项目主页 【Settings】 -> 【Secrets】 添加对应变量
-  #         password: ${{ secrets.DOCKERHUB_TOKEN }}
-  #     - name: Build and push Docker image to origin tag
-  #       uses: docker/build-push-action@v4.0.0 # docker build & push
-  #       with:
-  #         context: .
-  #         push: true
-  #         tags: qubo93/cloudflared-tunnel:${{ needs.update_release_draft.outputs.tag_name }}
-  #     - name: Build and push Docker image to origin tag
-  #       uses: docker/build-push-action@v4.0.0 # docker build & push
-  #       with:
-  #         context: .
-  #         push: true
-  #         tags: qubo93/cloudflared-tunnel:latest
+  push_to_registry:  # job的名字
+    name: Push Docker image to Docker Hub
+    runs-on: ubuntu-latest   # job运行的基础环境
+    steps:  # 一个job由一个或多个step组成
+      - name: Check out the repo
+        uses: actions/checkout@v3   # 官方的action，获取代码
+      - name: Set up Docker BuildX  # Docker配置多平台环境
+        uses: docker/setup-buildx-action@v2 
+      - name: Docker Login
+        uses: docker/login-action@v2.1.0  # 三方的action操作， 执行docker login
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}  # 配置dockerhub的认证，在Github项目主页 【Settings】 -> 【Secrets】 添加对应变量
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v4.3.0  # 抽取项目信息，主要是镜像的tag
+        with:
+          images: qubo93/cloudflared-tunnel
+      - name: Build and push Docker image for X86_64
+        uses: docker/build-push-action@v4.0.0 # docker build & push
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          # platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
