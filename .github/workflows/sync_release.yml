@@ -49,7 +49,7 @@ jobs:
           echo "The latest releases of the two repositories do not have the same name."
           origin_url=$(cat Dockerfile | sed -n '2p'| awk '{print $2}')
           sed -i "s^${origin_url}^${{ steps.official_release.outputs.download_url }}^g" Dockerfile
-          git commit -am "Update Dockerfile to ${{ steps.official_release.outputs.download_url }}"
+          git commit -am "Update Dockerfile to ${{ steps.official_release.outputs.release_name }}"
           git tag ${{ steps.official_release.outputs.release_name }}
           git push https://Jake-Qu:${GITHUB_PAT}@github.com/Jake-Qu/cloudflared-tunnel.git main --tags
       - name: Create GitHub Release
@@ -60,9 +60,10 @@ jobs:
         with:
           tag_name: ${{ steps.official_release.outputs.release_name }}
           release_name: "${{ steps.official_release.outputs.release_name }}"
-          body: "base package from https://github.com/cloudflare/cloudflared/releases/tag/${{ steps.official_release.outputs.release_name }}"
+          body: "base package from ${{ steps.official_release.outputs.download_url }}"
           draft: false
           prerelease: false
+          
 
   # update_release_publish:
   #   permissions:
