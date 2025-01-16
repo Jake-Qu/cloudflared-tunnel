@@ -92,6 +92,8 @@ jobs:
     steps:  # 一个job由一个或多个step组成
       - name: Check out the repo
         uses: actions/checkout@v3   # 官方的action，获取代码
+        with:
+          fetch-tags: 'true'
       - name: Set up Docker BuildX  # Docker配置多平台环境
         uses: docker/setup-buildx-action@v2 
       - name: Docker Login
